@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<form id="form">
+    <input id="query" type="text">
+    <button type="submit">Search</button>
+</form>
+
+<div id="results"></div>
+
+<script>
+    document.getElementById("form").addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const value = document.getElementById("query").value;
+
+        fetch(`https://api.tvmaze.com/search/shows?q=${value}`)
+            .then(res => res.json())
+            .then(data => {
+                const results = document.getElementById("results");
+                results.innerHTML = "";
+
+                data.forEach(item => {
+                    const show = item.show;
+
+                    const article = document.createElement("article");
+
+                    const name = document.createElement("h2");
+                    name.textContent = show.name;
+
+                    const link = document.createElement("a");
+                    link.href = show.url;
+                    link.textContent = "View Details";
+                    link.target = "_blank";
+
+                    const img = document.createElement("img");
+                    img.src = show.image?.medium;
+                    img.alt = show.name;
+
+                    const summary = document.createElement("div");
+                    summary.innerHTML = show.summary;
+
+                    article.appendChild(name);
+                    article.appendChild(link);
+                    article.appendChild(img);
+                    article.appendChild(summary);
+
+                    results.appendChild(article);
+                });
+            });
+    });
+</script>
+
+</body>
+</html>
